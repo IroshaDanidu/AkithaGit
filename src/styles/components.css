@@ -1,0 +1,180 @@
+/* Reusable component styles — relies on token variables in globals + theme vars */
+
+.app-shell { display: grid; grid-template-columns: 280px 1fr; gap: 0; min-height: 100vh; }
+
+.card {
+  background: var(--bg-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-tiny);
+  padding: var(--s-5);
+  transition: all var(--t-med) var(--ease-std);
+}
+.card:hover { box-shadow: var(--shadow-soft); transform: translateY(-2px); }
+
+.kpi { display: grid; gap: var(--s-2); }
+.kpi__label { font-size: var(--fs-caption); color: var(--text-2); letter-spacing: .08em; text-transform: uppercase; }
+.kpi__value { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-display); line-height: var(--lh-tight); }
+.card--kpi { padding: var(--s-5); }
+
+.btn { display: inline-flex; align-items: center; gap: var(--s-2); padding: var(--s-3) var(--s-4); border-radius: var(--radius-sm); border: 1px solid var(--border-strong); cursor: pointer; }
+.btn--primary { background: rgba(95,114,144,.2); border-color: var(--accent); }
+.btn--danger { background: rgba(211,107,107,.08); border-color: rgba(211,107,107,.12); }
+.btn--icon { width: 40px; height: 40px; padding: 0; justify-content: center; }
+
+.table { width: 100%; border-collapse: collapse; background: var(--bg-1); border-radius: var(--radius-card); overflow: hidden; border: 1px solid var(--border-subtle); }
+.table th { background: var(--bg-2); color: var(--text-2); padding: var(--s-4); text-align: left; font-size: var(--fs-caption); }
+.table td { padding: var(--s-4); border-bottom: 1px solid var(--border-subtle); color: var(--text-1); }
+
+.sidenav { position: sticky; top: 0; align-self: start; height: 100vh; width: 280px; padding: var(--s-6) var(--s-3); background: linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%); border-right: 1px solid var(--border-subtle); }
+.sidenav__title { font-family: var(--font-display); font-weight: 600; font-size: 16px; color: var(--text-0); }
+.sidenav__item { display:flex; align-items:center; gap: 12px; height: 36px; padding: 0 10px; border-radius: 10px; cursor:pointer; color: var(--text-1); }
+.sidenav__item.is-active { background: rgba(95,114,144,.18); color: var(--text-0); border: 1px solid rgba(95,114,144,.38); }
+
+.ghost-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.ghost-scroll::-webkit-scrollbar-thumb { background: #1e2531; border-radius: 999px; }
+
+.modal { background: var(--bg-1); border-radius: var(--radius-card); box-shadow: var(--shadow-soft); max-width: 600px; border: 1px solid var(--border-subtle); }
+
+/* Strong theme overrides to prevent legacy/global styles from forcing white backgrounds */
+.app--dark-minimal .card,
+.app--dark-minimal .table {
+  background: var(--bg-1) !important;
+  color: var(--text-0) !important;
+}
+
+.app--dark-minimal .table th,
+.app--dark-minimal .table td {
+  background: transparent !important;
+}
+
+/* Ensure modals are visible above overlays and have clear padding/contrast */
+.app--dark-minimal .modal-overlay { display: flex; justify-content: center; align-items: center; }
+.app--dark-minimal .modal {
+  z-index: 1001 !important;
+  padding: var(--s-5) !important;
+  background: var(--bg-1) !important;
+  color: var(--text-0) !important;
+  border: 1px solid var(--border-subtle) !important;
+}
+
+.divider { height: 1px; background: var(--border-subtle); margin: var(--s-4) 0; }
+
+/* Inline form card used when rendering form in place of table */
+.modal-inline {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none; /* allow it to fill the available content area */
+  padding: var(--s-4) var(--s-4);
+  border: 1px solid var(--border-subtle);
+}
+
+/* When rendering inline form, hide any global modal overlay that might still be present */
+.patients-view.has-inline-form .modal-overlay {
+  display: none !important;
+}
+
+.patients-view .modal-inline { max-width: none; margin: 0; }
+
+/* Tighten the horizontal spacing inside patients view so form/table use more width */
+.patients-view { padding-left: var(--s-4); padding-right: var(--s-4); }
+
+.patients-view .card { width: 100%; }
+
+/* Test Center layout: form (larger) + live monitoring (smaller) */
+.test-center-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr; /* form takes slightly more space */
+  gap: var(--s-5);
+}
+
+@media (max-width: 900px) {
+  .test-center-grid {
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+  }
+}
+
+/* Alerts summary cards: flex layout with left-aligned content similar to Dashboard */
+.alerts-cards {
+  display: flex;
+  gap: var(--s-5);
+}
+.alerts-cards > div {
+  flex: 1 1 0;
+}
+.alerts-cards .card--kpi { display: flex; align-items: flex-start; justify-content: flex-start; padding: var(--s-5); }
+.alerts-cards .kpi { align-items: flex-start; }
+.alerts-cards .kpi__label { text-align: left; }
+.alerts-cards .kpi__value { text-align: left; }
+
+@media (max-width: 700px) {
+  .alerts-cards { flex-direction: column; }
+}
+
+/* Live Monitoring — patient list: keep card compact but allow inner list to scroll */
+.live-monitoring {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.live-monitoring__list {
+  /* Keep the outer card size stable; inner list scrolls when large */
+  max-height:440px; /* increased to fit a taller card */
+  overflow-y: auto;
+  display: grid;
+  gap: var(--s-3);
+  grid-auto-rows: min-content;
+  padding-right: 6px; /* make room for scrollbar */
+}
+
+/* Small patient card inside live monitoring: use auto-fit responsive columns */
+.live-patient-card {
+  display: grid;
+  gap: var(--s-2);
+  align-items: center;
+  padding: var(--s-3);
+  background: var(--bg-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.live-patient-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.live-patient-card__meta .patient-id { font-family: var(--font-display); font-weight: 600; color: var(--accent); }
+.live-patient-card__meta .patient-name { font-size: var(--fs-caption); color: var(--text-1); }
+
+.live-patient-card__kpis {
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+}
+
+/* make badges and kpi labels consistent */
+.live-patient-card .badge { font-size: var(--fs-micro); }
+
+/* Position the connection status badge to the top-right of the small card */
+.live-patient-card .badge {
+  position: absolute;
+  top: 15px; /* ensure at least 5px from the top */
+  right: 15px; /* ensure at least 5px from the right */
+  padding: 6px 8px;
+  background-clip: padding-box;
+}
+
+/* KPI inline styling: label and value on same line */
+.kpi-inline { display: flex; gap: var(--s-1); align-items: baseline; }
+.kpi-inline .kpi__label { font-size: 11px; color: var(--text-2); }
+.kpi-inline .kpi__value { font-size: 14px; font-weight: 600; }
+.kpi__label { font-size: 11px; color: var(--text-2); }
+
+/* Make scrollbar subtle but visible */
+.live-monitoring__list.ghost-scroll::-webkit-scrollbar { width: 8px; }
+.live-monitoring__list.ghost-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 999px; }
+
